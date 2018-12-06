@@ -1,0 +1,270 @@
+specification ALTERNATING_BIT_PROTOCOL [PUT, GET] : noexit 
+
+(* Desenvolver o método de leitura de librarys, é essencial *)
+(* Depois disso tem que elaborar a simulação, dando ênfase a sincronização com troca de dados *)
+
+type Boolean is
+   sorts
+      Bool (*! implementedby ADT_BOOL comparedby ADT_CMP_BOOL
+               iteratedby ADT_ENUM_FIRST_BOOL and ADT_ENUM_NEXT_BOOL
+               printedby ADT_PRINT_BOOL *)
+   opns
+      false     (*! implementedby ADT_FALSE constructor *),
+      true      (*! implementedby ADT_TRUE constructor *) : -> Bool
+      not       (*! implementedby ADT_NOT *) : Bool -> Bool
+      _and_     (*! implementedby ADT_AND *),
+      _or_      (*! implementedby ADT_OR *),
+      _xor_     (*! implementedby ADT_XOR *),
+      _implies_ (*! implementedby ADT_IMPLIES *),
+      _iff_     (*! implementedby ADT_IFF *),
+      _eq_      (*! implementedby ADT_EQ_BOOL *),
+      _ne_      (*! implementedby ADT_NE_BOOL *) : Bool, Bool  -> Bool
+   eqns
+      forall x, y : Bool
+      ofsort Bool
+         not (true)   =  false;
+         not (false)  =  true;
+         x and true   =  x;
+         x and false  =  false;
+         x or true    =  true;
+         x or false   =  x;
+         x xor y      =  (x and not (y)) or (y and not (x));
+         x implies y  =  y or not (x);
+         x iff y      =  (x implies y) and (y implies x);
+         x eq y       =  x iff y;
+         x ne y       =  x xor y;
+endtype
+
+type BasicNaturalNumber is 
+   sorts Nat (*! implementedby ADT_NAT comparedby ADT_CMP_NAT
+                 iteratedby ADT_ENUM_FIRST_NAT and ADT_ENUM_NEXT_NAT
+                 printedby ADT_PRINT_NAT *)
+   opns 0 (*! implementedby ADT_N0 constructor *) : -> Nat
+        Succ (*! implementedby ADT_SUCC constructor *) : Nat -> Nat
+        _+_  (*! implementedby ADT_PLUS *),
+        _*_  (*! implementedby ADT_MULT *),
+        _**_ (*! implementedby ADT_POWER *) : Nat, Nat -> Nat
+   eqns
+      forall m, n : Nat
+      ofsort Nat
+         m + 0 = m;
+         m + Succ(n) = Succ(m) + n;
+      ofsort Nat
+         m * 0 = 0;
+         m * Succ(n) = m + (m * n);
+      ofsort Nat
+         m ** 0 = Succ(0);
+         m ** Succ(n) = m * (m ** n);
+endtype
+
+type NaturalNumber is BasicNaturalNumber, Boolean
+   opns 
+        _eq_ (*! implementedby ADT_EQ_NAT *), 
+        _ne_ (*! implementedby ADT_NE_NAT *), 
+        _lt_ (*! implementedby ADT_LT_NAT *),
+        _le_ (*! implementedby ADT_LE_NAT *),
+        _gt_ (*! implementedby ADT_GT_NAT *),
+        _ge_ (*! implementedby ADT_GE_NAT *) : Nat, Nat -> Bool
+   eqns
+      forall m, n : Nat
+      ofsort Bool
+         0 eq 0                   = true;
+         0 eq Succ (n)            = false;
+         Succ (m) eq 0            = false;                   
+         Succ (m) eq Succ (n)     = m eq n;                   
+      ofsort Bool
+         m ne n                   = not (m eq n);
+      ofsort Bool
+         0 lt 0                   = false;
+         0 lt Succ (n)            = true;
+         Succ (n) lt 0            = false;
+         Succ (m) lt Succ (n)     = m lt n;
+      ofsort Bool
+         m le n                   = (m lt n) or (m eq n);
+      ofsort Bool
+         m ge n                   = not (m lt n);
+      ofsort Bool
+         m gt n                   = not (m le n);
+endtype
+
+
+type NATURAL is NaturalNumber
+   opns 1 (*! implementedby ADT_N1 *), 
+        2 (*! implementedby ADT_N2 *), 
+        3 (*! implementedby ADT_N3 *), 
+        4 (*! implementedby ADT_N4 *), 
+        5 (*! implementedby ADT_N5 *), 
+        6 (*! implementedby ADT_N6 *), 
+        7 (*! implementedby ADT_N7 *),
+        8 (*! implementedby ADT_N8 *),
+        9 (*! implementedby ADT_N9 *) : -> Nat
+        _-_  (*! implementedby ADT_MINUS *),
+        _div_ (*! implementedby ADT_DIV *),
+        _mod_ (*! implementedby ADT_MOD *) : Nat, Nat -> Nat
+        _==_ (*! implementedby ADT_EQ_BIS_NAT *),
+        _<>_ (*! implementedby ADT_NE_BIS_NAT *),
+        _<_ (*! implementedby ADT_LT_BIS_NAT *),
+        _<=_ (*! implementedby ADT_LE_BIS_NAT *),
+        _>_ (*! implementedby ADT_GT_BIS_NAT *),
+        _>=_ (*! implementedby ADT_GE_BIS_NAT *) : Nat, Nat -> Bool
+        min (*! implementedby ADT_MIN *),
+        max (*! implementedby ADT_MAX *),
+        gcd (*! implementedby ADT_GCD *),
+        scm (*! implementedby ADT_SCM *) : Nat, Nat -> Nat
+   eqns
+      forall m, n : Nat
+      ofsort Nat
+         1 = Succ (0);
+         2 = Succ (1);
+         3 = Succ (2);
+         4 = Succ (3);
+         5 = Succ (4);
+         6 = Succ (5);
+         7 = Succ (6);
+         8 = Succ (7);
+         9 = Succ (8);
+      ofsort Nat
+         m - 0 = m;
+         Succ (m) - Succ (n) = m - n;
+      ofsort Nat
+
+         n ne 0, m lt n => m div n = 0;
+         n ne 0, m ge n => m div n = 1 + ((m - n) div n);
+      ofsort Nat
+         n ne 0, m lt n => m mod n = m;
+         n ne 0, m ge n => m mod n = ((m - n) mod n);
+      ofsort Bool
+         m == n                    = m eq n;
+         m <> n                    = m ne n;
+         m <= n                    = m le n;
+         m < n                     = m lt n;
+         m > n                     = m gt n;
+         m >= n                    = m ge n;
+      ofsort Nat
+         m le n => min (m, n) = m;
+         m gt n => min (m, n) = n;
+      ofsort Nat
+         m ge n => max (m, n) = m;
+         m lt n => max (m, n) = n;
+      ofsort Nat
+         m eq n, m ne 0 => gcd (m, n) = m;
+         m lt n, m ne 0 => gcd (m, n) = gcd (m, n - m);
+         m gt n, n ne 0 => gcd (m, n) = gcd (m - n, n);
+      ofsort Nat
+         scm (m, n) = (m * n) div gcd (m, n);
+endtype
+
+type BIT is
+   sorts BIT 
+   opns 0 (*! constructor *),
+        1 (*! constructor *) : -> BIT
+        not : BIT -> BIT
+   eqns
+      forall X, Y:BIT
+      ofsort BIT
+         not (0) = 1;
+         not (1) = 0;
+endtype
+
+type MESSAGES is NATURAL renamedby
+   sortnames MSG for NAT
+endtype
+
+behaviour
+
+hide SDT, RDT, RDTe, RACK, SACK, SACKe in
+      (
+         (
+         TRANSMITTER [PUT, SDT, SACK, SACKe] (0 of BIT)
+         |||
+         RECEIVER [GET, RDT, RDTe, RACK] (0 of BIT)
+         )
+      |[SDT, RDT, RDTe, RACK, SACK, SACKe]|
+         (
+         SDT !0 ; MEDIUM1 [SDT, RDT, RDTe]
+         |||
+         MEDIUM2 [RACK, SACK, SACKe]
+         )
+      )	
+
+where
+
+(*---------------------------------------------------------------------------*)
+
+   process TRANSMITTER [PUT, SDT, SACK, SACKe] (B:BIT) : noexit :=
+      PUT ?M:MSG;             (* acquisition d'un message *)
+         TRANSMIT [PUT, SDT, SACK, SACKe] (B, M)
+   where
+      process TRANSMIT [PUT, SDT, SACK, SACKe] (B:BIT, M:MSG) : noexit :=
+         SDT !M !B;           (* emission du message *)
+            (
+            SACK !B;          (* bit de controle correct *)
+               TRANSMITTER [PUT, SDT, SACK, SACKe] (B)
+                              (* l'erreur est introduite ici ... *)
+            []
+            SACK !(not (B));  (* bit de controle incorrect => reemission *)
+               TRANSMIT [PUT, SDT, SACK, SACKe] (B, M)
+            []
+            SACKe;            (* indication de perte => reemission *)
+               TRANSMIT [PUT, SDT, SACK, SACKe] (B, M)
+            []
+            i;                (* timeout => reemission *)
+               TRANSMIT [PUT, SDT, SACK, SACKe] (B, M)
+            )
+      endproc
+   endproc
+
+(*---------------------------------------------------------------------------*)
+
+   process RECEIVER [GET, RDT, RDTe, RACK] (B : BIT) : noexit :=
+      RDT ?M:MSG !B;          (* bit de controle correct *)
+         GET !M;              (* livraison du message *)
+            RACK !B;          (* envoi d'un acquittement correct *)
+               RECEIVER [GET, RDT, RDTe, RACK] (not (B))
+      []
+      RDT ?M:MSG !(not (B));  (* bit de controle incorrect => *)
+         RACK !(not (B));     (* envoi d'un acquittement incorrect *)
+            RECEIVER [GET, RDT, RDTe, RACK] (B)
+      []
+      RDTe;                   (* indication de perte => *)
+         RACK !(not (B));     (* envoi d'un acquittement incorrect *)
+            RECEIVER [GET, RDT, RDTe, RACK] (B)
+      []
+      i;                      (* timeout => *)
+         RACK !(not (B));     (* envoi d'un acquittement incorrect *)
+            RECEIVER [GET, RDT, RDTe, RACK] (B)
+   endproc
+   
+(*---------------------------------------------------------------------------*)
+
+   process MEDIUM1 [SDT, RDT, RDTe] : noexit :=
+      SDT ?M:MSG ?B:BIT;   (* reception d'un message *)
+         (
+         RDT !M !B;        (* transmission correcte *)
+            MEDIUM1 [SDT, RDT, RDTe]
+         []
+         RDTe;             (* perte avec indication *)
+            MEDIUM1 [SDT, RDT, RDTe]
+         []
+         i;                (* perte silencieuse *)
+            MEDIUM1 [SDT, RDT, RDTe]
+         )
+   endproc
+
+(*---------------------------------------------------------------------------*)
+
+   process MEDIUM2 [RACK, SACK, SACKe] : noexit :=
+      RACK ?B:BIT;   (* reception d'un acquittement *)
+         (
+         SACK !B;    (* transmission correcte *)
+            MEDIUM2 [RACK, SACK, SACKe]
+         []
+         SACKe;      (* perte avec indication *)
+            MEDIUM2 [RACK, SACK, SACKe]
+         []
+         i;          (* perte silencieuse *)
+            MEDIUM2 [RACK, SACK, SACKe]
+         )
+   endproc
+
+endspec

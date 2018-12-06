@@ -1,0 +1,11 @@
+specification NOVAESPECIFICACAODELOTOS [] : exit
+	behaviour
+		
+	where
+	
+	process  [] : exit :=
+	library endlib
+  
+  	endproc
+
+endspec

@@ -1,0 +1,134 @@
+(******************************************************************************
+ * negociação e recomendação em uma rede de confiança.lotos: 
+ * Nessa especificação trabalhamos com  a questão da recomendação e medição de credibilidade em uma rede de confiança.
+ * 
+ * 
+ * 
+ ******************************************************************************)
+
+specification NEGOCIACAO [valorado, naovalorado,dados,metadados, individual, intergrupo, intragrupos] : exit
+
+   
+  library
+     BOOLEAN, NATURAL  endlib
+
+behaviour
+
+  (
+     CONTEXTO [valorado, naovalorado]
+               (usuario0, 2, recomendacao, adicionar)
+  
+     |||
+     CONTEXTO [valorado, naovalorado]
+               (usuario1, usuario1, nivelcredibilidade, adicionar)
+  
+  )
+  ||| 
+
+  (*|[valorado, naovalorado]|*)
+
+  (
+     REDECONFIANCA[valorado, naovalorado,dados,metadados, individual, intergrupo, intragrupos]
+              (especializacao1, tempo2, nivelIndicacao1)
+     |||
+     REDECONFIANCA [valorado, naovalorado,dados,metadados, individual, intergrupo, intragrupos]
+              (especializacao2, tempo2, nivelIndicacao1)
+     |||
+     REDECONFIANCA [valorado, naovalorado,dados,metadados, individual, intergrupo, intragrupos]
+              (especializacao3, tempo1, nivelIndicacao2)
+     |||
+     REDECONFIANCA [valorado, naovalorado,dados,metadados, individual, intergrupo, intragrupos]
+              (especializacao4, tempo2, nivelIndicacao3)
+     |||
+     REDECONFIANCA [valorado, naovalorado,dados,metadados, individual, intergrupo, intragrupos]
+              (especializacao5, tempo2, nivelIndicacao3)
+     |||
+     REDECONFIANCA [valorado, naovalorado,dados,metadados, individual, intergrupo, intragrupos]
+              (especializacao6, tempo2, nivelIndicacao4)
+  
+     |[dados]|
+     REPOSITORIO[dados,metadados] )
+
+
+where
+
+
+process CONTEXTO[valorado,naovalodaro]: noexit :=
+hide nivelAlto, nivelBaixo, nivelMedio in
+valorado; nivelAlto
+
+where
+
+process CULTURAL[valorado,naovalorado]
+hide nivelAlto, nivelBaixo, nivelMedio in
+valorado;nivelAlto
+[]
+naovalorado;nivelBaixo
+[]
+naovalorado;nivelMedio
+
+endprocess
+
+process PESSOAL[valorado,naovalorado]
+hide nivelAlto, nivelBaixo, nivelMedio in
+valorado;nivelAlto
+[]
+naovalorado;nivelBaixo
+[]
+naovalorado;nivelMedio
+endprocess
+
+PROCESS CRENCA[valorado,naovalorado]
+hide nivelAlto, nivelBaixo, nivelMedio in
+valorado;nivelAlto
+[]
+naovalorado;nivelBaixo
+[]
+naovalorado;nivelMedio
+endprocess
+
+endprocess
+
+process REDECONFIANCA [dados,metadados, individual, intergrupo, intragrupos]: noexit:=
+
+hide recomendacao, reputacao in
+LET Rede_Principal: nat = 1 IN
+LET Rede_recomendacao: nat = 2 IN
+LET Rede_reputacao: nat = 3 IN
+([Rede_Principal = reputacao]-> recomendacao;CREDIBILIDADE[baixa,alta]
+)
+[]
+([Rede_Principal = recomendacao]-> reputacao;REDECONFIANCA [dados,metadados, individual, intergrupo, intragrupos])
+
+where
+
+process CREDIBILIDADE [baixa, alta] (P:NAT) : noexit :=
+      baixa ?N:NAT;
+         (
+            let conteudo:NAT = N mod P in
+               (
+                  [conteudo eq 0] -> CREDIBILIDADE [baixa, alta] (P)
+                  []
+                  [not (conteudo eq 0)] -> alta !N; CREDIBILIDADE [baixa, alta] (P)
+               )
+         )
+   endproc
+
+endprocess
+
+process REPOSITORIO[dados,metadados]: noexit:=
+
+hide atualizar,armazenar,ler,remover in
+atualizar;REPOSITORIO[dados,metadados];
+[]
+armazenar;REPOSITORIO[dados,metadados]
+[]
+ler;REPOSITORIO[dados,metadados]
+[]
+escrever;REPOSITORIO[dados,metadados]
+[]
+remover;REPOSITORIO[dados,metadados]
+
+endprocess
+
+endspec

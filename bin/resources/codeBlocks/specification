@@ -1,0 +1,6 @@
+ {$filename} [] : exit
+	behaviour
+		
+	where
+	
+endspec

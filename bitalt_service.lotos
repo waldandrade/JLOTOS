@@ -1,0 +1,87 @@
+specification ALTERNATING_BIT_SERVICE [PUT, GET] : noexit 
+
+ type TABLE is NATURAL
+      sorts TAB  (*! implementedby Tab printedby PrintTab *)
+
+      opns EMPTY (*! implementedby Empty constructor *) 
+                : -> TAB
+           REPLACE (*! implementedby Replace constructor *)
+                : TAB, NAT -> TAB
+           REPLACE (*! implementedby Replace constructor *)
+                : TAB, NAT, BOOL -> TAB
+           TEST (*! implementedby Test *)
+                : TAB, NAT -> BOOL
+           SET (*! implementedby Set *) 
+                : TAB, NAT -> TAB
+           UNSET (*! implementedby Unset *)
+                : TAB, NAT -> TAB
+            as  
+                :  -> BOOL
+           as2 
+                : TAB, TAB -> BOOL
+           _+_ 
+                : TAB, TAB -> BOOL
+    endtype
+
+behaviour
+
+   SERVICE [PUT, GET]
+
+where
+
+type TABLE is NATURAL
+      sorts TAB  (*! implementedby Tab printedby PrintTab *)
+
+      opns 
+	
+           REPLACE (*! implementedby Replace constructor *)
+                : -> TAB
+	EMPTY (*! implementedby Empty constructor *) 
+                : -> TAB
+           TEST (*! implementedby Test *)
+                : TAB, NAT -> BOOL
+           SET (*! implementedby Set *) 
+                : TAB, NAT -> TAB
+           UNSET (*! implementedby Unset *)
+                : TAB, NAT -> TAB
+           _as 
+                : TAB, TAB -> BOOL
+           _as_ 
+                : TAB, TAB -> BOOL
+    endtype
+
+(*---------------------------------------------------------------------------*)
+
+   process SERVICE [PUT, GET] : noexit :=
+        GET !REPLACE(as,as, as);  (* livraison du message *)
+            exit ( as as as )
+
+	where
+	type TABLE is NATURAL
+      sorts TAB  (*! implementedby Tab printedby PrintTab *)
+
+      opns EMPTY (*! implementedby Empty constructor *) 
+                : -> TAB
+           REPLACE (*! implementedby Replace constructor *)
+                : TAB, NAT, BOOL -> TAB
+           TEST (*! implementedby Test *)
+                : TAB, NAT -> BOOL
+           SET (*! implementedby Set *) 
+                : TAB, NAT -> TAB
+           UNSET (*! implementedby Unset *)
+                : TAB, NAT -> TAB
+           _as_ 
+                : TAB, TAB -> BOOL
+           _as_ 
+                : TAB, TAB -> BOOL
+    endtype
+	 process SERVICE2 [PUT, GET] : noexit :=
+	PUT ; exit
+	 endproc
+
+   endproc
+
+
+(*---------------------------------------------------------------------------*)
+
+endspec
